@@ -1,0 +1,45 @@
+
+body {
+	background: url('/images/background.png') no-repeat center center fixed;
+	background-size: 100% 100%;
+	/*background-repeat:no-repeat;*/
+	text-align: center;
+}
+
+#main {
+	padding-top: 15px;
+}
+
+.rect {
+	width: 27%;
+	margin: 20px;
+}
+
+.squared {
+	height:20%;
+	margin: auto 0%;
+	float: left;
+}
+
+.up {
+	margin-bottom: 0px;
+
+}
+
+.down {
+	margin-top: -5px;
+}
+
+
+
+/*header {
+	width: 780px;
+	margin: auto;
+	text-align: center;
+}
+*/
+/*img {
+	display: block;
+	margin: auto;
+}*/
+

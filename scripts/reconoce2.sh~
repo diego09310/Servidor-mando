@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#Finaliza la grabación
+#killall arecord
+
+# Ruta al programa que realiza el reconocimiento
+LID_RPi_DIR=/home/pi/Instalaciones/SDG2_v2/LID_RPi
+
+# Ruta al fichero con los resultados
+SCORES=${LID_RPi_DIR}/fusion/plenty_closed_mfcc_500i_32G_rplp_400i_32G_WithLN_hmmHung_isEval__Albayzin_TEST.scores
+
+echo hola
+# Actualizar la lista con el nombre del archivo 
+
+basename $1 .wav > "${LID_RPi_DIR}/prueba.lst"
+
+# Realizar el reconocimiento
+${LID_RPi_DIR}/runAll_vs2.sh  #>/dev/null
+
+echo ey
+# Decidir el idioma reconocido: ESCOGE LA MÁXIMA PUNTUACIÓN.
+scores=(`cat ${SCORES}`)
+
+#scores de la posición 3 a la 8
+result_n=3
+for i in 4 5 6 7 8
+	do
+		st=$(echo "${scores[result_n]} < ${scores[$i]}" | bc)
+		if [ $st -eq 1 ]
+			then
+			result_n=$i
+		fi
+done
+case $result_n in
+	3) result=vasco;;
+	4) result=catalán;;
+	5) result=inglés;;
+	6) result=gallego;;
+	7) result=portugués;;
+	8) result=español;;
+esac
+echo $result
+#echo  ${scores[@]}

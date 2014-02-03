@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cp -f remote_number_1d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_1.png
+cp -f remote_number_2d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_2.png
+cp -f remote_number_3d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_3.png
+cp -f remote_number_4d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_4.png
+cp -f remote_number_5d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_5.png
+cp -f remote_number_6d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_6.png
+cp -f remote_number_7d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_7.png
+cp -f remote_number_8d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_8.png
+cp -f remote_number_9d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_9.png
+cp -f remote_number_0d.png ../../SamsungRemote/res/drawable-hdpi/remote_number_0.png
