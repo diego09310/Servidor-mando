@@ -102,7 +102,7 @@ http.createServer(function(request, response){
    		var route = (post_data._method || request.method) + ' ' + url.pathname;
    		console.log('Ruta: ' + route);
     	switch (route) {
-    	  	case 'GET /'		: { controller.player(); break; }		//Cambiar a controller.index()
+    	  	case 'GET /'		: { controller.index(); break; }		//Cambiar a controller.index()
     	  	case 'GET /player'	: { controller.player(); break; }
     	  	case 'POST /remote'	: { controller.button(); break; }
 			default: {
