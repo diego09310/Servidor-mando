@@ -1,42 +1,78 @@
-var http = require('http');
+var https = require('https');
 var URL = require('url');
 var fs = require('fs');
 var mime = require('mime');
 var exec = require('child_process').exec;
 var child;
-// var util = require('util');
 var qs = require('querystring');
+
 //variables auxiliares
-var port = 5000;
-var arduino_port = 	"/dev/ttyACM0";
+var port = 443;
 var key = "";
+var device = "LG_MKJ39170805_TV";
+var device = "LG";
+var device = "LG";
+var remote = {
+		name:		"LG",
+		power:		"KEY_POWER", 
+		tv:		"KEY_TV", 
+		source:		"INPUT", 
+		menu:		"KEY_MENU", 
+		info:		"KEY_INFO", 
+		mute:		"KEY_MUTE", 
+		list:		"KEY_LIST", 
+		1:		"KEY_1", 
+		2:		"KEY_2",
+		3:		"KEY_3",
+		4:		"KEY_4",
+		5:		"KEY_5",
+		6:		"KEY_6",
+		7:		"KEY_7",
+		8:		"KEY_8",
+		9:		"KEY_9",
+		0:		"KEY_0",
+		up:		"\\^",
+		left:		"\\<",
+		ok:		"KEY_OK",
+		right:		"\\>",
+		down:		"KEY_V",
+		vol_up:		"KEY_VOLUMEUP",
+		vol_down:	"KEY_VOLUMEDOWN",
+		ch_up:		"KEY_CHANNELUP",
+		ch_down:	"KEY_CHANNELDOWN"
+};
 	
 //Inicialización
 
-child = exec('stty -F ' + arduino_port + ' cs8 9600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts',
-function  (error, stdout, stderr) {
-	if (error !== null) {
-	//	console.log('Error en la Inicialización. ¿Arduino no conectado?');
-	//	process.exit(1);
-	} else {
-		console.log('server inicializado en el puerto: ' + port);
-	}
-});
-
-http.createServer(function(request, response){
-	var model = {
-		button: function () {
-			child = exec('echo ' + key + ' > ' + arduino_port,
-  			function (error, stdout, stderr) {
-    			if (error !== null) {
-    				console.log('exec error: ' + error);
-    			}
-			});
+child = exec('sudo systemctl restart lirc.service',
+	function  (error, stdout, stderr) {
+		if (error === null) {
+			console.log('server inicializado en el puerto: ' + port);
 		}
 	}
-	var view = {
-		render: function (file,r1) {
-			fs.readFile('app.html', 'utf-8', function (err, app) {
+);
+
+const options = {
+	key: fs.readFileSync('keys/key.pem'),
+    cert: fs.readFileSync('keys/certificate.pem')
+	// ca: fs.readFileSync('keys/intermediate.crt')
+};
+
+https.createServer(options, function(request, response){
+	var model = {
+		button: function () {
+			console.log('irsend SEND_ONCE ' + device + ' ' + remote[key]);
+			child = exec('irsend SEND_ONCE ' + device + ' ' + remote[key],
+  				function (error, stdout, stderr) {
+    					if (error !== null) {
+    						console.log('exec error: ' + error);
+    					}
+				});
+		}
+	} 
+	var view = { 
+			render: function (file,r1) { 
+				fs.readFile('app.html', 'utf-8', function (err, app) {
 				if (!err) {
 					fs.readFile(file, 'utf-8', function(err, view) {
 						if (!err) {
@@ -91,7 +127,7 @@ http.createServer(function(request, response){
 		file: function () { view.file(url.pathname.slice(1)); }
 	}
 
-	var url = URL.parse(request.url, true);//
+	var url = URL.parse(request.url, true);
 	var post_data = "";
 	request.on('data', function (chunk) { post_data += chunk; });
    	request.on('end', function() {
@@ -102,7 +138,7 @@ http.createServer(function(request, response){
    		var route = (post_data._method || request.method) + ' ' + url.pathname;
    		console.log('Ruta: ' + route);
     	switch (route) {
-    	  	case 'GET /'		: { controller.index(); break; }		//Cambiar a controller.index()
+    	  	case 'GET /'		: { controller.index(); break; }
     	  	case 'GET /player'	: { controller.player(); break; }
     	  	case 'POST /remote'	: { controller.button(); break; }
 			default: {
